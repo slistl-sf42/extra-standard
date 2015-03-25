@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.extra</groupId>
 	<artifactId>extraClientLight</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>ExtraClientLight</name>
 	<description>Lightweight eXTra-Client</description>
 	<dependencies>
@@ -31,6 +31,10 @@
 				<exclusion>
 					<artifactId>asm</artifactId>
 					<groupId>asm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>cxf-rt-ws-addr</artifactId>
+					<groupId>org.apache.cxf</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
