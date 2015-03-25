@@ -42,7 +42,7 @@ public class ExtraClientImpl implements IextraClient {
 		int returnCode = 99;
 
 		if (!RequestBeanValidator.validateRequestBean(requestExtra)) {
-
+			LOGGER.error("RequestBean konnte nicht validiert werden!");
 			returnCode = 1;
 
 		} else {
