@@ -43,7 +43,6 @@ import de.drv.dsrv.spoc.extra.v1_3.jaxb.components.SupportedVersionsType;
 import de.drv.dsrv.spoc.extra.v1_3.jaxb.messages.DataRequestArgumentType;
 import de.drv.dsrv.spoc.extra.v1_3.jaxb.messages.DataRequestQueryType;
 import de.drv.dsrv.spoc.extra.v1_3.jaxb.messages.DataRequestType;
-import de.drv.dsrv.spoc.extra.v1_3.jaxb.messages.OperandSetType;
 import de.drv.dsrv.spoc.extra.v1_3.jaxb.messages.OperandType;
 import de.drv.dsrv.spoc.extra.v1_3.jaxb.request.TransportRequestBodyType;
 import de.drv.dsrv.spoc.extra.v1_3.jaxb.request.TransportRequestHeaderType;
@@ -52,8 +51,16 @@ import de.extra.extraClientLight.model.RequestExtraBean;
 import de.extra.extraClientLight.util.ClientConstants;
 
 public class BuildExtraTransport {
-	private static Logger LOGGER = LoggerFactory.getLogger(BuildExtraTransport.class);
 
+	private static Logger LOGGER = LoggerFactory
+			.getLogger(BuildExtraTransport.class);
+
+	/**
+	 * Erstellt den Transport-Request aus der RequestBean
+	 * 
+	 * @param requestBean
+	 * @return TransportRequest
+	 */
 	public static TransportRequestType buildTransportRequest(
 			RequestExtraBean requestBean) {
 
@@ -64,10 +71,19 @@ public class BuildExtraTransport {
 		request.setTransportHeader(buildHeader(requestBean));
 		if (!requestBean.getDataObjekt().isQuery()) {
 			try {
-				request.setTransportBody(buildBody(requestBean.getDataObjekt()
-						.getData()));
+
+				// TODO Leeren Body zulassen (DataObjekt = null)
+				if (requestBean.getDataObjekt() != null) {
+					// Lese Nutzdaten aus Stream
+					request.setTransportBody(buildBody(requestBean
+							.getDataObjekt().getData()));
+				} else {
+
+					// Sende mit leerem Body
+					request.setTransportBody(new TransportRequestBodyType());
+				}
 			} catch (IOException e) {
-				LOGGER.error("Fehler beim Lesen des InputStreams",e);
+				LOGGER.error("Fehler beim Lesen des InputStreams", e);
 			}
 		} else {
 
@@ -181,14 +197,14 @@ public class BuildExtraTransport {
 
 		requestIdArgument.getContent().add(jaxbOperand);
 		dataQuery.getArgument().add(requestIdArgument);
-		/*
-		 * procedureArgument.setProperty(ClientConstants.QUERY_PROCEDURE);
-		 * 
-		 * dataQuery.getArgument().add(procedureArgument);
-		 * 
-		 * dataTypeArgument.setProperty(ClientConstants.QUERY_DATATYPE);
-		 * dataQuery.getArgument().add(dataTypeArgument);
-		 */
+
+		procedureArgument.setProperty(ClientConstants.QUERY_PROCEDURE);
+
+		dataQuery.getArgument().add(procedureArgument);
+
+		dataTypeArgument.setProperty(ClientConstants.QUERY_DATATYPE);
+		dataQuery.getArgument().add(dataTypeArgument);
+
 		dataRequest.setQuery(dataQuery);
 
 		return dataRequest;
